@@ -1,4 +1,3 @@
-
 var margin = {top: 20, right: 20, bottom: 30, left: 50};
     var w = 750 - margin.left - margin.right;
     var h = 400 - margin.top - margin.bottom;
@@ -21,11 +20,27 @@ var data = [
 var dataset = data;
 var col = d3.scale.category10();
 
+//Loading data from CSV:
+var format = d3.time.format("%b %Y");
+d3.csv("stocks.csv", function(error,stocks) {
+    if (error) {
+      return console.warn(error);
+    }
+    console.log(stocks);
+    stocks.forEach(function(d) {
+      console.log(d);
+      d.price = +d.price;
+    });
+  });
+
+dataset = stocks;
+
 var svg = d3.select("body").append("svg")
     .attr("width", w + margin.left + margin.right)
     .attr("height", h + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
 var x = d3.scale.linear()
         .domain([0, 1000])
@@ -34,15 +49,12 @@ var x = d3.scale.linear()
 var xAxis = d3.svg.axis()
   .scale(x)
   .orient("bottom");
-
 var y = d3.scale.linear()
         .domain([0, 1000])
         .range([h, 0]);
-
 var yAxis = d3.svg.axis()
   .scale(y)
   .orient("left")
-
 svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(0," + h + ")")
@@ -52,7 +64,6 @@ svg.append("g")
     .attr("y", -6)
     .style("text-anchor", "end")
     .text("Price");
-
 svg.append("g")
     .attr("class", "axis")
     .call(yAxis)
