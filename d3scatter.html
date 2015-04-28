@@ -16,10 +16,20 @@ body {
   shape-rendering: crispEdges;
 }
 
+.tooltip {
+	position: absolute;
+	width: 100px;
+	height: 50px;
+	pointer-events: none;
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+}
 
 </style>
 <body>
-
+<section>
+</section>	
 <label for = "type>">Stock Type</label>
 <input type="text" id="mytype" readonly style = "border:0; color:#f6931f; font-weight:bold;>"><br>
 <select id="myselectform">
@@ -30,17 +40,15 @@ body {
 	<option value = "fastfood">Fast Food</option>
 	<option value = "pharm"> Pharm.</option>
 </select>
+<p>Volume</p>
+	<div id="vol" class="slider-range"></div>
+	<label for="volamount">Volume Range:</label>
+	<input type="text" id="volamount" readonly style="border:0; color:#f6931f; font-weight:bold;">
 
-<!-- <script type="text/javascript" scr="http//code.jquery.com/jquery-2.1.3.js"></script>
-<script type="text/javascript" src="http//code.jquery.com/ui/1.11.1/jquery-ui.js"></script> 
-<script src="http://d3js.org/d3.v3.min.js"></script>-->
+<script type="text/javascript" scr="http//code.jquery.com/jquery-2.1.3.js"></script>
+<!-- <script type="text/javascript" src="http//code.jquery.com/ui/1.11.1/jquery-ui.js"></script> -->
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="d3scatter.js"></script>
-<script>
-	document.getElementById("myselectform").onchange = function() {
-		$("#mytype").val(this.value);
-		filterType(this.value);
-	}
-</script>
 
 </body>
 </html>

@@ -21,40 +21,45 @@ var dataset = data;
 var col = d3.scale.category10();
 
 //Loading data from CSV:
-var format = d3.time.format("%b %Y");
-d3.csv("http://students.washington.edu/conrad16/info498/d3-scatter/stocks.csv", function(error,stocks) {
-    if (error) {
-      return console.warn(error);
-    }
-    console.log(stocks);
-    stocks.forEach(function(d) {
-      console.log(d);
-      d.price = +d.price;
-    });
-    dataset = stocks;
-  });
+
+// var format = d3.time.format("%b %Y");
+// d3.csv("http://students.washington.edu/conrad16/info498/d3-scatter/stocks.csv", function(error,stocks) {
+//     if (error) {
+//       return console.warn(error);
+//     }
+//     console.log(stocks);
+//     stocks.forEach(function(d) {
+//       console.log(d);
+//       d.price = +d.price;
+//     });
+//     dataset = stocks;
+//   });
 
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("section").append("svg")
     .attr("width", w + margin.left + margin.right)
     .attr("height", h + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var tooltip = d3.select("section").append("div")
+  .attr("class", "tooltip")
+  .style("opactiy", 0);
 
 var x = d3.scale.linear()
-        .domain([0, 1000])
-        .range([0, w]);
-
+  .domain([0, 1000])
+  .range([0, w]);
 var xAxis = d3.svg.axis()
   .scale(x)
   .orient("bottom");
+
 var y = d3.scale.linear()
-        .domain([0, 1000])
-        .range([h, 0]);
+  .domain([0, 1000])
+  .range([h, 0]);
 var yAxis = d3.svg.axis()
   .scale(y)
-  .orient("left")
+  .orient("left");
+
 svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(0," + h + ")")
@@ -79,8 +84,12 @@ drawVis(dataset);
 var mytype ="all";
 var patt = new RegExp("all");
 
+document.getElementById("myselectform").onchange = function() {
+    filterType(this.value);
+}
+
 function filterType(myType) {
-  mytype = mytype;
+  mytype = myType;
   var res = patt.test(mytype);
   if(res){
     var toVisualize = dataset;
@@ -99,7 +108,7 @@ function drawVis(data) {
     .attr("cx", function(d) { return x(d.price);  })
     .attr("cy", function(d) { return y(d.tValue);  })
     .style("fill", function(d) {return col(d.vol);});
-    circles.exit().remove();
+  circles.exit().remove();
 
  circles.enter().append("circle")
     .attr("cx", function(d) { return x(d.price);  })
@@ -108,12 +117,34 @@ function drawVis(data) {
     .style("fill", function(d) {return col(d.vol);})
     .style("opacity", 0.5)
     .style("stroke", "black");
-  circles
-  .on("mouseover", function(d,i){d3.select(this).attr("r",8)})
-  .on("mouseout", function(d,i){d3.select(this).attr("r",4)})
-
+  circles 
+  .on("mouseover", function(d,i) {
+    d3.select(this).attr("r",8);
+    tooltip.transition()
+      .duration(200)
+      .style("opacity", 1);
+    tooltip.html("Stock <b>"+d.name+"</b>:<br>Price: "+d.price+"<br>Value: "+d.tValue+"<br>Volume: "+d.vol)
+      .style("left", (d3.event.pageX + 5)+"px")
+      .style("top", (d3.event.pageY -28) +"px");
+  })
+  .on("mouseout", function(d,i) {
+    d3.select(this).attr("r",4);
+    tooltip.transition()
+      .duration(500)
+      .style("opacity", 0);
+  });
 }
 
+document.onReady()(function() {
+  $("#vol").slider({
+    range: true,
+    min: 0,
+    max: maxVol,
+    values: [0, maxVol],
+    slide: function( event, ui) {
+      $("#volamount").val(ui.values[0] + "-" + ui.values[1]);
+      filterData("vol",ui.values);} });
+  $("#volamount").val($("#vol").slider("values",0) + "-"+$("#vol").slider("values",1)); });
 
 
 
