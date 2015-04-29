@@ -17,24 +17,28 @@ var data = [
   {name: "L", type: "retail", price: 532, tValue: 731, vol: 1002},
   {name: "M", type: "retail", price: 788, tValue: 631, vol: 310}
 ];
-var dataset = data;
+var dataset;
+// dataset = data;
 var col = d3.scale.category10();
 
 //Loading data from CSV:
 
-// var format = d3.time.format("%b %Y");
-// d3.csv("http://students.washington.edu/conrad16/info498/d3-scatter/stocks.csv", function(error,stocks) {
-//     if (error) {
-//       return console.warn(error);
-//     }
-//     console.log(stocks);
-//     stocks.forEach(function(d) {
-//       console.log(d);
-//       d.price = +d.price;
-//     });
-//     dataset = stocks;
-//   });
+var format = d3.time.format("%b %Y");
+d3.csv("stocks.csv", function(error,stocks) {
+    if (error) {
+      return console.warn(error);
+    }
+    //console.log(stocks);
+    stocks.forEach(function(d) {
+      //console.log(d);
+      d.price = +d.price;
+      d.tValue = +d.tValue;
+      d.vol = +d.vol;
+    });
+    dataset = stocks;
+  });
 
+// Drawing axes and margins:
 
 var svg = d3.select("section").append("svg")
     .attr("width", w + margin.left + margin.right)
@@ -80,6 +84,8 @@ svg.append("g")
     .text("True Value");
 
 drawVis(dataset);
+
+// Functions for interactivity:
 
 var mytype ="all";
 var patt = new RegExp("all");
@@ -135,16 +141,16 @@ function drawVis(data) {
   });
 }
 
-document.onReady()(function() {
-  $("#vol").slider({
-    range: true,
-    min: 0,
-    max: maxVol,
-    values: [0, maxVol],
-    slide: function( event, ui) {
-      $("#volamount").val(ui.values[0] + "-" + ui.values[1]);
-      filterData("vol",ui.values);} });
-  $("#volamount").val($("#vol").slider("values",0) + "-"+$("#vol").slider("values",1)); });
+// document.onReady()(function() {
+//   $("#vol").slider({
+//     range: true,
+//     min: 0,
+//     max: maxVol,
+//     values: [0, maxVol],
+//     slide: function( event, ui) {
+//       $("#volamount").val(ui.values[0] + "-" + ui.values[1]);
+//       filterData("vol",ui.values);} });
+//   $("#volamount").val($("#vol").slider("values",0) + "-"+$("#vol").slider("values",1)); });
 
 
 
