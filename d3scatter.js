@@ -19,12 +19,25 @@ var data = [
 ];
 var dataset;
 // dataset = data;
-var col = d3.scale.category10();
 
 //Loading data from CSV:
 
-var format = d3.time.format("%b %Y");
-d3.csv("stocks.csv", function(error,stocks) {
+// var promise = d3.promise.csv("stocks.csv");
+// promise.then(function(input) {
+//   d.forEach(function(d) {
+//     console.log(d);
+//     d.price = +d.price;
+//     d.tValue = +d.tValue;
+//     d.vol = +d.vol;
+//   });
+//   dataset=input;
+// }, function(error) {
+//   console.warn(error);
+// });
+
+// Jessica's code from d3-scatter_full.js : 
+
+d3.csv("stocks.csv", function(error, stocks) {
     if (error) {
       return console.warn(error);
     }
@@ -36,9 +49,12 @@ d3.csv("stocks.csv", function(error,stocks) {
       d.vol = +d.vol;
     });
     dataset = stocks;
+    drawVis(dataset);
   });
 
 // Drawing axes and margins:
+
+var col = d3.scale.category10();
 
 var svg = d3.select("section").append("svg")
     .attr("width", w + margin.left + margin.right)
@@ -83,7 +99,7 @@ svg.append("g")
     .style("text-anchor", "end")
     .text("True Value");
 
-drawVis(dataset);
+//drawVis(dataset);
 
 // Functions for interactivity:
 
