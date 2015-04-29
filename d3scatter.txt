@@ -28,15 +28,8 @@ body {
 
 </style>
 <body>
-
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-
-<section id="graph"></section>	
-
+<section id="graph">
+</section>	
 <label for = "type>">Stock Type</label>
 <input type="text" id="mytype" readonly style = "border:0; color:#f6931f; font-weight:bold;>"><br>
 <select id="myselectform">
@@ -47,12 +40,14 @@ body {
 	<option value = "fastfood">Fast Food</option>
 	<option value = "pharm"> Pharm.</option>
 </select>
-
 <p>Volume</p>
 	<div id="vol" class="slider-range"></div>
 	<label for="volamount">Volume Range:</label>
 	<input type="text" id="volamount" readonly style="border:0; color:#f6931f; font-weight:bold;">
 
+<script type="text/javascript" scr="jquery-1.11.2.min.js"></script>
+<!--<script type="text/javascript" src="jquery-ui-1.11.4/jquery-ui.js"></script>-->
+<script src="http://d3js.org/d3.v3.js"></script>
 <script src="d3scatter.js"></script>
 <script type="text/javascript" src="d3.promise-master/src/d3.promise.js"></script>
 

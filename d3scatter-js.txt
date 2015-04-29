@@ -20,7 +20,22 @@ var data = [
 var dataset;
 // dataset = data;
 
-//Loading data from CSV: 
+//Loading data from CSV:
+
+// var promise = d3.promise.csv("stocks.csv");
+// promise.then(function(input) {
+//   d.forEach(function(d) {
+//     console.log(d);
+//     d.price = +d.price;
+//     d.tValue = +d.tValue;
+//     d.vol = +d.vol;
+//   });
+//   dataset=input;
+// }, function(error) {
+//   console.warn(error);
+// });
+
+// Jessica's code from d3-scatter_full.js : 
 
 d3.csv("stocks.csv", function(error, stocks) {
     if (error) {
@@ -84,6 +99,8 @@ svg.append("g")
     .style("text-anchor", "end")
     .text("True Value");
 
+//drawVis(dataset);
+
 var attributes = ["vol", "price"];
 var ranges = [[0,1200],[0,999]];
 
@@ -144,47 +161,35 @@ function drawVis(data) {
   });
 }
 
-var maxVol = 1200;
-
-//define any slider functions here, since depend on max of variables
-  $(function() {
-    $( "#vol" ).slider({
-      range: true,
-      min:  0,
-      max: maxVol,
-      values: [ 0, maxVol ],
-      slide: function( event, ui ) {
-        $( "#volamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-        filterData("vol", ui.values);
-      }
-    });
-    $( "#volamount" ).val( $( "#vol" ).slider( "values", 0 ) +
-      " - " + $( "#vol" ).slider( "values", 1 ) );
-  });
-
-//all the data is now loaded, so draw the initial vis
-drawVis(dataset);
-
-
-function filterData(attr, values){
-  for (i = 0; i < attributes.length; i++){
-    if (attr == attributes[i]){
-      ranges[i] = values;
-    }
-  }
-  var res = patt.test(mytype);
-  if(res){
-    var toVisualize = dataset.filter(function(d) { 
-    return d[attr] >= values[0] && d[attr] <= values[1];
-    //return isInRange(d)
-    }); 
-  }else{
-    var toVisualize = dataset.filter(function(d) { 
-    return d[attr] >= values[0] && d[attr] <= values[1] && d["type"]==mytype;
-  });
-  }
-  drawVis(toVisualize);
+document.getElementById("vol").onchange = function() {
+  document.getElementById("vol").slider({
+    range: true,
+    min: 0,
+    max: maxVol,
+    values: [0, maxVol],
+    slide: function( event, ui) {
+      document.getElementById("volamount").val(ui.values[0] + "-" + ui.values[1]);
+      filterData("vol",ui.values);} });
+  document.getElementById("volamount").val(document.getElementById("vol").slider("values",0) + "-" +
+         document.getElementById("vol").slider("values",1)); 
 }
+
+function filterData(attr, values) {
+   for (i=0; i <attributes.length; i++) {
+      if (attr == attributes[i]) {
+         ranges[i] = values;
+      }
+   }
+   var toVisualize = dataset.filter(function(d) {
+      for (i=0; i < attributes.length; i++) {
+         return d[attributes[i]] >= ranges[i][0] && d[attributes[i]] <= ranges[i][1];
+      }
+   });
+   drawVis(toVisualize);
+}
+
+
+
 
 
 
