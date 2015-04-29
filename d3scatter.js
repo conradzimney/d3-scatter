@@ -101,6 +101,9 @@ svg.append("g")
 
 //drawVis(dataset);
 
+var attributes = ["vol", "price"];
+var ranges = [[0,1200],[0,999]];
+
 // Functions for interactivity:
 
 var mytype ="all";
@@ -153,21 +156,37 @@ function drawVis(data) {
     d3.select(this).attr("r",4);
     tooltip.transition()
       .duration(500)
-      .style("opacity", 0);
+      .style("opacity", 0)
+      .style("border-style", "solid");
   });
 }
 
-// document.onReady()(function() {
-//   $("#vol").slider({
-//     range: true,
-//     min: 0,
-//     max: maxVol,
-//     values: [0, maxVol],
-//     slide: function( event, ui) {
-//       $("#volamount").val(ui.values[0] + "-" + ui.values[1]);
-//       filterData("vol",ui.values);} });
-//   $("#volamount").val($("#vol").slider("values",0) + "-"+$("#vol").slider("values",1)); });
+document.getElementById("vol").onchange = function() {
+  document.getElementById("vol").slider({
+    range: true,
+    min: 0,
+    max: maxVol,
+    values: [0, maxVol],
+    slide: function( event, ui) {
+      document.getElementById("volamount").val(ui.values[0] + "-" + ui.values[1]);
+      filterData("vol",ui.values);} });
+  document.getElementById("volamount").val(document.getElementById("vol").slider("values",0) + "-" +
+         document.getElementById("vol").slider("values",1)); 
+}
 
+function filterData(attr, values) {
+   for (i=0; i <attributes.length; i++) {
+      if (attr == attributes[i]) {
+         ranges[i] = values;
+      }
+   }
+   var toVisualize = dataset.filter(function(d) {
+      for (i=0; i < attributes.length; i++) {
+         return d[attributes[i]] >= ranges[i][0] && d[attributes[i]] <= ranges[i][1];
+      }
+   });
+   drawVis(toVisualize);
+}
 
 
 
